@@ -8,4 +8,7 @@ dependencies {
 }
 
 project(':api') {
+     tasks.withType(Jar) {
+            destinationDir = rootProject.jar.destinationDir
+    }
 }
