@@ -60,6 +60,12 @@ dependencies {
 
 project(':api') {
     tasks.withType(Jar) {
+        baseName = rootProject.name
+        appendix = 'api'
+        //archivesBaseName = rootProject.name+"-"+appendix
+        //project.ext.set("archivesBaseName", rootProduct+"-api")
+        project.ext.set("archivesBaseName", rootProject.name+"-api")
+        println "####### archiveBaseName: $archivesBaseName"
         destinationDir = rootProject.jar.destinationDir
     }
 }

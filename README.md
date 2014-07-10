@@ -375,3 +375,50 @@ Total time: 6.938 secs
 ```
 And should look like this Artifactory:
 ![](./doc/pics/gradle-artifactory-publish.png)
+
+### Naming the API JAR helloworld-api.jar
+We would like to reach a stage where we have two jars:
+
+* helloworld-1.0.1-SNAPSHOT.jar
+* helloworld-api-1.0.1-SNAPSHOT.jar
+
+published to Artifactory
+
+First let's start by making sure the api JAR is created under the correct name
+
+To do so, make sure the :api project section looks like this:
+
+```
+project(':api') {
+    tasks.withType(Jar) {
+        baseName = rootProject.name
+        appendix = 'api'
+        destinationDir = rootProject.jar.destinationDir
+    }
+}
+```
+Now run a clean build `./gradlew clean build` and you will get:
+
+```
+$ ls build/libs/
+helloworld-1.0.1-SNAPSHOT.jar  helloworld-api-1.0.1-SNAPSHOT.jar
+```
+
+But when publishing to Artifactory with `./gradlew artifactoryPublish` you will get the Artifact published incorrectly:
+
+![](./doc/pics/gradle-artifactory-incorrect-publish-sub-project.png)
+
+Note the SNAPSHOT not converted to the time-stamp and the incorrecet version and extention in the Gradle Dependency declaration
+
+To resolve this we need to set a new property **archivesBaseName**, so that the :api project section should look like this:
+
+```
+project(':api') {
+    tasks.withType(Jar) {
+        baseName = rootProject.name
+        appendix = 'api'
+        project.ext.set("archivesBaseName", rootProject.name+"-api")
+        destinationDir = rootProject.jar.destinationDir
+    }
+}
+```
