@@ -1,5 +1,56 @@
+buildscript {
+    repositories {
+        maven { url 'http://repo.jfrog.org/artifactory/gradle-plugins-snapshots' }
+    }
+    dependencies {
+        classpath(group: 'org.jfrog.buildinfo', name: 'build-info-extractor-gradle', version: '2.1.x-SNAPSHOT')
+    }
+    configurations.classpath {
+        resolutionStrategy {
+            cacheDynamicVersionsFor 0, 'seconds'
+            cacheChangingModulesFor 0, 'seconds'
+        }
+    }
+}
+
+
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'artifactory'
+
+    artifactory {
+        contextUrl = 'http://localhost:8081/artifactory'
+        publish {
+            repository {
+                repoKey = 'libs-snapshot-local'
+                username = artifactoryUser
+                password = artifactoryPassword
+                ivy {
+                    ivyLayout = '[organization]/[module]/ivy-[revision].xml'
+                }
+            }
+            defaults {
+                publishConfigs('published')
+            }
+        }
+    }
+
+    group = 'com.example'
+
+    configurations {
+        published
+    }
+    artifactory {
+        publish {
+                defaults {
+                        publishConfigs('published')
+                }
+        }
+    }
+    artifacts {
+        published jar
+    }
+
     version = '1.0.1-SNAPSHOT'
 }
 
@@ -8,7 +59,7 @@ dependencies {
 }
 
 project(':api') {
-     tasks.withType(Jar) {
-            destinationDir = rootProject.jar.destinationDir
+    tasks.withType(Jar) {
+        destinationDir = rootProject.jar.destinationDir
     }
 }

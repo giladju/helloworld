@@ -374,4 +374,4 @@ BUILD SUCCESSFUL
 Total time: 6.938 secs
 ```
 And should look like this Artifactory:
-![](gradle-artifactory-publish.png)
+![](./doc/pics/gradle-artifactory-publish.png)
