@@ -54,7 +54,12 @@ allprojects {
     version = productVersion+'-SNAPSHOT'
 }
 
+repositories {
+	mavenCentral()
+}
+
 dependencies {
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '3.6.7.Final'
         compile project(':api')
 }
 
@@ -62,8 +67,6 @@ project(':api') {
     tasks.withType(Jar) {
         baseName = rootProject.name
         appendix = 'api'
-        //archivesBaseName = rootProject.name+"-"+appendix
-        //project.ext.set("archivesBaseName", rootProduct+"-api")
         project.ext.set("archivesBaseName", rootProject.name+"-api")
         println "####### archiveBaseName: $archivesBaseName"
         destinationDir = rootProject.jar.destinationDir
